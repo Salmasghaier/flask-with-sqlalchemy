@@ -1,6 +1,5 @@
 import os
 import logging
-logging.warn(os.environ["DUMMY"])
 
 from flask import Flask
 from config import Config
