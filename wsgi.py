@@ -17,7 +17,13 @@ from schemas import products_schema, product_schema
 
 @app.route('/hello')
 def hello():
-    return "Hello World!"
+
+    return "hello world!"
+
+@app.route('/')
+def home():
+    products = db.session.query(Product).all()
+    return render_template('home.html', products=products)
 
 @app.route('/products', methods=['GET', 'POST'])
 def products():
