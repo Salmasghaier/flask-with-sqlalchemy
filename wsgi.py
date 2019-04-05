@@ -23,7 +23,8 @@ def hello():
 def products():
     if request.method == 'GET':
         products = db.session.query(Product).all() # SQLAlchemy request => 'SELECT * FROM products'
-        return products_schema.jsonify(products)
+#        return products_schema.jsonify(products)
+        return render_template('home.html', products=products)
     elif request.method == 'POST':
         product_json = request.get_json()
         ed_product = Product(name=product_json['name'],description=product_json['description'])
