@@ -9,6 +9,9 @@ app.config.from_object(Config)
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow # Order is important here!
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
@@ -23,10 +26,6 @@ admin = Admin(app, name='Back-office', template_mode='bootstrap3')
 admin.add_view(ModelView(Product, db.session)) # `Product` needs to be imported before
 
 # [...] Flask `app` and `db` creation
-
-
-
-
 @app.route('/hello')
 def hello():
     return "hello world!"
@@ -40,7 +39,8 @@ def home():
 def products():
     if request.method == 'GET':
         products = db.session.query(Product).all() # SQLAlchemy request => 'SELECT * FROM products'
-        return products_schema.jsonify(products)
+#        return products_schema.jsonify(products)
+        return render_template('home.html', products=products)
     elif request.method == 'POST':
         product_json = request.get_json()
         ed_product = Product(name=product_json['name'],description=product_json['description'])
@@ -64,3 +64,7 @@ def get_products(id):
         db.session.query(Product).filter(Product.id == my_json['id']).update({Product.name: my_json['name'], Product.description: my_json['description']}, synchronize_session=False)
         db.session.commit()
         return jsonify(''),204
+
+@app.route('/admin')
+def admin():
+    return admin
